@@ -31,7 +31,7 @@ def about_view(request,*args,**kwargs):
         "visits":query_set,
         "count_visits":count_visits,
         "page_visits":page_qs.count(),
-        "percent":(page_qs.count()*100)/query_set.count()
+        "percent":percent
     }
     PageVisits.objects.create(path=request.path)
     return render(request,html_template,my_context)
