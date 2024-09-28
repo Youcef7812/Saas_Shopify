@@ -48,7 +48,7 @@ RUN pip install -r /tmp/requirements.txt
 # RUN python manage.py collectstatic --noinput
 
 # set the Django default project name
-ARG PROJ_NAME="cfehome"
+ARG PROJ_NAME="first_saas"
 
 # create a bash script to run the Django project
 # this script will execute at runtime when
