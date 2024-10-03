@@ -16,20 +16,45 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+DATABASE_URL=config("DATABASE_URL",cast=str)
+CONN_MAX_AGE=config("CONN_MAX_AGE",cast=int,default=30)
+print(f"DATABASE_URL: {DATABASE_URL}") 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+
+if DATABASE_URL is not None:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=30,
+            conn_health_checks=True
+            )
+        
+
+    }
+
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+"""
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-29a9bbvr2p3-cd!y+x7mt@vyd5059*146b=ohoj8!8m1#_l-j#'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-print(os.environ.get("DJANGO_DEBUG"))
-#DEBUG = str(os.environ.get("DJANGO_DEBUG")).lower()=="true"
-DEBUG=config("DJANGO_DEBUG",cast=bool)
-print("Debug",DEBUG,type(DEBUG))
+print("DJANGO_DEBUG from env:", config("DJANGO_DEBUG", default=None))
+print("Type of DJANGO_DEBUG:", type(config("DJANGO_DEBUG", default=None)))
+DEBUG = config("DJANGO_DEBUG") == "1"
+print("Final DEBUG value:", DEBUG)
+
 ALLOWED_HOSTS = [
-    ".railway.app"
+    ".railway.app",
+    'localhost',
+    '127.0.0.1'
 ]
 
 if DEBUG:
@@ -86,12 +111,7 @@ WSGI_APPLICATION = 'first_saas.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+
 
 
 # Password validation
